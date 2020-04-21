@@ -1,3 +1,5 @@
 .git/
 .vscode/
 .venv/
+server/.flaskenv
+server/__pycache__/
