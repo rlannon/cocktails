@@ -34,7 +34,53 @@ cur = db.cursor()
 # A const string for the API's base url
 API_URL_BASE = "/api/v1/"
 
-# index.html
+# A const string for the API's recipe table
+RECIPE_TABLE = "recipes"
+
+
+# Query data from the database
+def get_data(query: str) -> list:
+    """
+    get_data
+    Fetches data from the database
+
+    @param  query   The SQL query to be executed
+    
+    @return A list of entries returned by the database
+    """
+    cur = db.cursor()
+    cur.execute(query)
+    return cur.fetchall()
+
+
+# Query the database by cocktail name
+def query_by_name(name: str) -> list:
+    """
+    query_by_name
+    Queries the database by cocktail name
+
+    @param  name    A string containing the name of the cocktail
+
+    @return A list of entries returned by the database
+    """
+
+    # Construct the query; use all lowercase letters for cocktail name
+    name = name.lower()
+    query = f"SELECT * FROM {RECIPE_TABLE} WHERE name = {name};"
+    return get_data(query)
+
+
+# Get API version and other information
+@app.route('/api/v1')
+def version():
+    return render_template('version.html')
+
+
+# Route for index.html
 @app.route('/')
 def index():
+    """
+    index
+    The route for the API's main index page
+    """
     return render_template('index.html')
