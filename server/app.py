@@ -37,7 +37,4 @@ API_URL_BASE = "/api/v1/"
 # index.html
 @app.route('/')
 def index():
-    query = "SELECT name FROM recipes;"
-    cur.execute(query)
-    print(cur.fetchall())
     return render_template('index.html')
