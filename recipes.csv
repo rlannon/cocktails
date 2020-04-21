@@ -7,7 +7,7 @@ manhattan,"{""whiskey"": ""2 oz"", ""vermouth"": ""0.75 oz"", ""angostura bitter
 martini,"{""vodka"": ""3 oz"", ""vermouth"": ""0.5 oz""}",,"{olive,lemon}",straight,cocktail glass,vodka,dry vermouth should be used, less commonly served on the rocks
 martini,"{""gin"": ""3 oz"", ""vermouth"": ""0.5 oz""}",,"{olive,lemon}",straight,cocktail glass,gin,dry vermouth should be used, less commonly served on the rocks
 dirty martini,"{""gin"": ""3 oz"", ""vermouth"": ""0.5 oz"", ""olive juice"": ""0.5 oz""}",,{olives},straight,cocktail glass,gin,,
-mint julep,"{""mint"": ""4 leaves"", ""sugar"": ""1 teaspoon"", ""water"": ""2 teaspoons"", ""bourbon"": ""2 oz""}",,"{""mint sprig""}",on the rocks,highball glass,bourbon,,
+mint julep,"{""mint"": ""4 leaves"", ""sugar"": ""1 teaspoon"", ""water"": ""2 teaspoons"", ""bourbon"": ""2 oz""}",,"{""mint sprig""}",on the rocks,highball glass,whiskey,bourbon is traditional,
 moscow mule,"{""vodka"": ""1.5 oz"", ""lime juice"": ""1/6 oz"", ""ginger beer"": ""4 oz""}",,{lime},on the rocks,copper mug,vodka,,
 mojito,"{""mint"": ""6 leaves"", ""sugar"": ""2 teaspoons"", ""white rum"": ""1.5 oz"", ""lime juice"": ""1 oz"", ""soda water"": ""as desired""}",,"{""sprig of mint"",""yerba buena""}",on the rocks,collins glass,rum,,
 white russian,"{""cream"": ""1 oz"", ""vodka"": ""1 2/3 oz"", ""coffee liqueur"": ""2/3 oz""}",,{},on the rocks,old fashioned glass,vodka,,
@@ -21,8 +21,11 @@ cosmopolitan,"{""vodka"": ""1.5 oz"", ""lime juice"": ""0.5 oz"", ""triple sec""
 mai tai,"{""rum"": ""1.5 oz"", ""lime juice"": ""0.5 oz"", ""orgeat syrup"": ""0.5 oz"", ""orange curacao"": ""0.5 oz""}",,"{lime,pineapple}",on the rocks,highball glass,rum,,
 gin and juice,"{""gin"": ""1.5 oz"", ""juice"": ""to top off""}",,{},on the rocks,collins glass,gin,,
 paradise,"{""gin"": ""1.2 oz"", ""orange juice"": ""0.5 oz"", ""apricot brandy"": ""0.6 oz""}",Shake together over ice. Strain into cocktail glass and serve chilled.,{},straight,cocktail glass,gin,,
-daiquiri,"{“rum”: “1.5 oz”, “simple syrup”: “0.5 oz”, “lime juice”: “1 oz”}",Pour all ingredients into shaker with ice cubes. Shake well. Strain in chilled cocktail glass.,{},straight,cocktail glass,rum,daiquiris are a family of cocktails; recipes may differ depending on variety,
+daiquiri,"{“rum”: “1.5 oz”, “simple syrup”: “0.5 oz”, “lime juice”: “1 oz”}",Pour all ingredients into shaker with ice cubes. Shake well. Strain in chilled cocktail glass.,{},straight,cocktail glass,rum,daiquiris are a family of cocktails, recipes may differ depending on variety
 whiskey sour,"{“bourbon”: “2 oz”, “lemon juice”: “0.75 oz”, “simple syrup”: “0.75 oz”}",Shake with ice and pour.,"{“orange”, “maraschino cherry”}",on the rocks,old fashioned glass,whiskey,,
 irish coffee,"{“whiskey”: “2 oz”, “coffee”: “4 oz”, “brown sugar”: “1 tsp”, “whipped cream”: “to top off”}",,{},hot,irish coffee mug,whiskey,Irish whiskey should be used,
 black russian,"{“coffee liqueur”: “2/3 oz”, “vodka”: “1 2/3 oz”}",Pour all ingredients into an old-fashioned glass with ice cubes. Stir gently.,{},on the rocks,old fashioned glass,vodka,,
 harvey wallbanger,"{“vodka”: “1.5 oz”, “orange juice”: “3 oz”, “galliano”: “0.5 oz”}","Stir the vodka and orange juice with ice in the glass, then float the Galliano on top. Garnish and serve.","{""maraschino cherry"",""orange""}",on the rocks,highball glass,vodka,,
+monte carlo,"{“rye”: “2 oz”, “benedictine”: “1/2 oz”, “angostura bitters”: “1 dash”}",,{},on the rocks,old fashioned glass,whiskey,rye is traditional,
+piña colada,"{“pineapple juice”: “3 oz”, “white rum”: “1 oz”, “coconut cream”: “1 oz”}","Mix with crushed ice until smooth. Pour into chilled glass, garnish, and serve.","{“pineapple wedge”, “maraschino cherry”}",blended,hurricane glass,rum,the poco grande glass is the traditional form of the hurricane glass used,
+rum and coke,"{“rum”: “2 oz”, “cola”: “as desired”}",,{},on the rocks,old fashioned glass,rum,white and spiced rum are both common,
