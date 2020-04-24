@@ -9,12 +9,15 @@ from flaskext.markdown import Markdown
 import psycopg2
 import os
 
+# custom modules
+import db_utilities
+import recipe
+
 # initialize the flask app
 app = Flask(__name__)
 
-# initialize CORS to allow API access
-# todo: uncomment this to enable CORS
-# cors = CORS(app, resources={r'/api/*': {"origins": "*"}})
+# initialize CORS; for the time being, allow API access on all domains
+cors = CORS(app, resources={r'/api/*': {"origins": "*"}})
 
 # initialize the markdown rendering library with the tables extension -- this is used for the API's default homepage
 Markdown(app, extensions=['tables', 'markdown.extensions.tables'])
@@ -37,44 +40,46 @@ API_URL_BASE = "/api/v1/"
 # A const string for the API's recipe table
 RECIPE_TABLE = "recipes"
 
+#
+#   App utilities
+#
 
-# Query data from the database
-def get_data(query: str) -> list:
+def query_by_ingredient(ingredients: list) -> list:
     """
-    get_data
-    Fetches data from the database
+    query_by_ingredient
+    Searches the database for cocktails that contain any of the listed ingredients
 
-    @param  query   The SQL query to be executed
+    @param  ingredients The list of ingredients to be used in the search
+    @return A list of recipe objects
+    """
+    return []
+
+def contains_all_ingredients(ingredients: list) -> list:
+    """
+    contains_all_ingredients
+    Searches the database for cocktails containing all of the listed ingredients
     
-    @return A list of entries returned by the database
+    @param  ingredients The list of ingredients to be used in the search
+    @return A list of recipe object
     """
-    cur = db.cursor()
-    cur.execute(query)
-    return cur.fetchall()
+    return []
 
-
-# Query the database by cocktail name
-def query_by_name(name: str) -> list:
-    """
-    query_by_name
-    Queries the database by cocktail name
-
-    @param  name    A string containing the name of the cocktail
-
-    @return A list of entries returned by the database
-    """
-
-    # Construct the query; use all lowercase letters for cocktail name
-    name = name.lower()
-    query = f"SELECT * FROM {RECIPE_TABLE} WHERE name = {name};"
-    return get_data(query)
-
+#
+#   App routes
+#
 
 # Get API version and other information
 @app.route('/api/v1')
 def version():
     return render_template('version.html')
 
+@app.route(API_URL_BASE + 'ingredients=<ingredients>')
+def ingredients(ingredients: str):
+    print("ingredients: " + ingredients)
+    ingredients = ingredients.lower()
+    data = query_by_ingredient(ingredients)
+    print(data)
+    return render_template('version.html')
 
 # Route for index.html
 @app.route('/')

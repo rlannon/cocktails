@@ -3,3 +3,5 @@
 .venv/
 server/.flaskenv
 server/__pycache__/
+server/update_db.py
+*.sql
