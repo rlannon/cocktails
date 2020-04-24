@@ -15,6 +15,7 @@ import recipe
 
 # initialize the flask app
 app = Flask(__name__)
+app.json_encoder = recipe.RecipeJSONEncoder
 
 # initialize CORS; for the time being, allow API access on all domains
 cors = CORS(app, resources={r'/api/*': {"origins": "*"}})
@@ -64,7 +65,36 @@ def query_by_ingredient(ingredients: list) -> list:
     @param  ingredients The list of ingredients to be used in the search
     @return A list of recipe objects
     """
-    return []
+
+    # Get a list of names of cocktails containing the specified ingredients
+    query = f"""
+            SELECT DISTINCT recipe.name
+            FROM ((recipe
+            INNER JOIN cocktail_ingredient ON cocktail_ingredient.recipe_id = recipe.recipe_id)
+            INNER JOIN ingredients ON ingredients.ingredient_id = cocktail_ingredient.ingredient_id)
+            WHERE
+            """
+    for i in range(len(ingredients)):
+        query += f"ingredients.name = '{ingredients[i]}'"
+        if i < len(ingredients) - 1:
+            query += " OR "
+    query += ';'
+
+    # Now, execute the query and use fetch() to get all the recipes
+    cur.execute(query)
+    names = cur.fetchall()
+
+    # iterate through our names, fetch their recipes, and add them to the list -- if nothing was returned (no cocktails contain the ingredients specified), an empty list will be returned (fetchall returns [] if nothing is found)
+    recipes = []
+    for t in names:
+        # use fetch to get recipe objects
+        name = t[0] # t is a tuple containing (name,)
+        found = db_utilities.fetch(name, cur)
+
+        # concatenate the lists
+        recipes += found
+
+    return recipes
 
 def contains_all_ingredients(ingredients: list) -> list:
     """
@@ -75,6 +105,7 @@ def contains_all_ingredients(ingredients: list) -> list:
     @return A list of recipe object
     """
     return []
+
 
 #
 #   App routes
@@ -89,7 +120,8 @@ def version():
 @app.route(API_URL_BASE + 'cocktail=<name>')
 def name(name: str):
     name = name.lower()
-    
+    cocktails = query_by_name(name)
+    return jsonify(cocktails)
 
 # Get recipes by ingredients
 @app.route(API_URL_BASE + 'ingredients=<ingredients>')

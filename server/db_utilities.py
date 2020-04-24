@@ -122,4 +122,5 @@ def fetch(name: str, cur) -> list:
         to_add = recipe.recipe(recipe_name, ingredients, garnishes, drinkware, served, recipe_instructions, recipe_notes)
         recipes.append(to_add)
 
+    # return our list of recipes
     return recipes
