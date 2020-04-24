@@ -104,7 +104,80 @@ def contains_all_ingredients(ingredients: list) -> list:
     @param  ingredients The list of ingredients to be used in the search
     @return A list of recipe object
     """
-    return []
+
+    # Do some preliminary checks to avoid errors
+    if ingredients is None or len(ingredients) == 0:
+        # Return an empty list if we didn't get any ingredients
+        return []
+    elif len(ingredients) == 1:
+        # Otherwise, if we only have one ingredient, just send this to query_by_ingredient
+        return query_by_ingredient(ingredients)
+
+    # First, we need the ingredient ids
+    ids = []
+    for i in ingredients:
+        query = f"""
+        SELECT ingredient_id
+        FROM ingredients
+        WHERE name = '{i}';
+        """
+        cur.execute(query)
+        i_id = cur.fetchone()
+
+        # if we couldn't find the ingredient, raise an exception
+        if i_id is None:
+            raise Exception("No such ingredient")   # handle this by removing ingredient?
+
+        # otherwise, we have a tuple containing (ingredient_id,)
+        ids.append(i_id[0])
+
+    # Now, construct the query with a self join on cocktail_ingredient
+    query = f"""
+    SELECT {ingredients[0]}.recipe_id
+    FROM 
+    """
+    for i in range(len(ingredients)):
+        query += f"cocktail_ingredient {ingredients[i]}"
+        if i < len(ingredients) - 1:
+            query += ", "
+        else:
+            query += " "
+    
+    # make sure all ingredient ids are equal
+    query += "WHERE "
+    for i in range(len(ingredients)):
+        query += f"{ingredients[i]}.ingredient_id = {ids[i]} AND "
+    
+    # make sure the recipe ids are equal among all of the table names
+    for i in range(1, len(ingredients)):
+        query += f"{ingredients[i]}.recipe_id = {ingredients[0]}.recipe_id"
+        if i < len(ingredients) - 1:
+            query += " AND "
+        else:
+            query += ";"
+
+    # Now, execute the query
+    cur.execute(query)
+    results = cur.fetchall()
+
+    # Iterate through the results and get the recipe names
+    names = []
+    for r in results:
+        # Fetch the name corresponding with the obtained recipe id
+        cur.execute(f"SELECT name FROM recipe WHERE recipe_id = {r[0]};")
+        r_name = cur.fetchone()
+        
+        # Make sure we got a result; append it to our names list
+        if r_name is None:
+            raise Exception("No such recipe in table with the given id")
+        names.append(r_name[0])
+    
+    # Now, get the recipes
+    recipes = []
+    for name in names:
+        recipes += db_utilities.fetch(name, cur)
+
+    return recipes
 
 
 #
@@ -117,6 +190,7 @@ def version():
     return render_template('version.html')
 
 # Get cocktail by name
+@app.route(API_URL_BASE + 'name=<name>')
 @app.route(API_URL_BASE + 'cocktail=<name>')
 def name(name: str):
     name = name.lower()
@@ -127,11 +201,22 @@ def name(name: str):
 @app.route(API_URL_BASE + 'ingredients=<ingredients>')
 def ingredients(ingredients: str):
     # Get the list of ingredients
-    ingredients = ingredients.lower()
     ingredients = ingredients.split('+')
+    ingredients = db_utilities.normalize_strings(ingredients, cur)
 
     # Send our list to the query
     data = query_by_ingredient(ingredients)
+    return jsonify(data)
+
+# Get recipes containing all of the specified ingredients
+@app.route(API_URL_BASE + 'contains=<ingredients>')
+def contains(ingredients: str):
+    # Get the list of ingredients
+    ingredients = ingredients.split('+')
+    ingredients = db_utilities.normalize_strings(ingredients, cur)
+
+    # Send our list to the query
+    data = contains_all_ingredients(ingredients)
     return jsonify(data)
 
 # Route for index.html

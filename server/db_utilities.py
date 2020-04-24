@@ -6,6 +6,44 @@
 
 import recipe
 
+#
+#   Normalization functions
+#
+
+def normalize_strings(ingredients: list, cur) -> list:
+    """
+    normalize_strings
+    Normalizes the string names supplied to what the database expects
+
+    The database expects fairly particular ingredient/garnish/drinkware names, but users might supply slightly different input parameters -- we want to be able to normalize for that, so this function takes common variations and swaps them for what our database expects
+    This function utilizes the database table 'normalize' to make the swaps
+
+    @param  ingredients The list of ingredients to normalize
+    @param  cur The database cursor
+    @return A list of normalized names
+    @throws This function will only throw exceptions in the event of a malformed SQL query or some other similar error
+    """
+
+    # Iterate over the ingredients and normalize as we go
+    normalized = []
+    for i in ingredients:
+        # first, make sure it's lowercase
+        n = i.lower()
+
+        # see if we have a normalized version; if not, push the original (might be valid, might not)
+        cur.execute(f"SELECT db_name FROM normalize WHERE supplied_name = '{n}';")
+        r = cur.fetchone()
+        if r is None:
+            normalized.append(n)
+        else:
+            normalized.append(r[0])
+    
+    return normalized
+
+#
+#   Fetch / retrieval
+#
+
 def insert(r: recipe.recipe, cur) -> None:
     """
     insert

@@ -26,7 +26,7 @@ The JSON Objects returned by this API contain the following fields:
 
 Paths supported by this API are:
 
-* `cocktail=<name>` - Get a cocktail by name
+* `cocktail=<name>` or `name=<name>`- Get a cocktail by name
 * `ingredients=<ingredients>` - Lists cocktails containing any of the specified ingredients; ingredients may be concatenated with the plus sign (`+`)
 * `contains=<ingredients>` - Filter by cocktails that contain all of the specified ingredients; concatenation with the plus sign is supported
 * `garnish=<garnish>` - Filter cocktails by their typical garnishes. As with `ingredients` and `contains`, multiple may be specified with concatenation
