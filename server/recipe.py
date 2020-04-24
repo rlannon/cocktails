@@ -5,14 +5,14 @@
 # Contains a class to hold cocktail recipes
 
 class recipe:
-    def __init__(self, name: str, ingredients: list, garnish: list, drinkware: list, served: list, instructions: str, notes: str):
+    def __init__(self, name: str, ingredients: list, garnish: list, drinkware: list, served: list, instructions, notes):
         self.name = name
         self.ingredients = ingredients  # tuples containing (name, measurement, unit)
         self.garnish = garnish
         self.drinkware = drinkware
         self.served = served
-        self.instructions = instructions
-        self.notes = notes
+        self.instructions = instructions if instructions is not None else ""
+        self.notes = notes if notes is not None else ""
     
     # getters
 
@@ -58,6 +58,6 @@ class recipe:
             to_return += f"{i}"
         
         to_return += "\nInstructions: " + self.instructions + "\n"
-        "Notes: " + self.notes + "\n"
+        to_return += "Notes: " + self.notes + "\n"
 
         return to_return

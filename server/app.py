@@ -44,6 +44,18 @@ RECIPE_TABLE = "recipes"
 #   App utilities
 #
 
+def query_by_name(name: str) -> list:
+    """
+    query_by_name
+    Searches the database for cocktails with the specified name
+
+    @param  name    The name of the cocktail we are searching for
+    @return A list of the recipes that were found
+    """
+    
+    results = db_utilities.fetch(name, cur)
+    return results
+
 def query_by_ingredient(ingredients: list) -> list:
     """
     query_by_ingredient
@@ -73,13 +85,22 @@ def contains_all_ingredients(ingredients: list) -> list:
 def version():
     return render_template('version.html')
 
+# Get cocktail by name
+@app.route(API_URL_BASE + 'cocktail=<name>')
+def name(name: str):
+    name = name.lower()
+    
+
+# Get recipes by ingredients
 @app.route(API_URL_BASE + 'ingredients=<ingredients>')
 def ingredients(ingredients: str):
-    print("ingredients: " + ingredients)
+    # Get the list of ingredients
     ingredients = ingredients.lower()
+    ingredients = ingredients.split('+')
+
+    # Send our list to the query
     data = query_by_ingredient(ingredients)
-    print(data)
-    return render_template('version.html')
+    return jsonify(data)
 
 # Route for index.html
 @app.route('/')
