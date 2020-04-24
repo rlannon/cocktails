@@ -179,6 +179,34 @@ def contains_all_ingredients(ingredients: list) -> list:
 
     return recipes
 
+# Query by cocktail drinkware
+def query_by_drinkware(drinkware: str) -> list:
+    """
+    query_by_drinkware
+    Returns a list of recipes that are served in the supplied drinkware
+    """
+
+    query = f"SELECT drinkware_id FROM drinkware WHERE name = '{drinkware}';"
+    cur.execute(query)
+
+    drinkware_id = cur.fetchone()
+    if drinkware_id is None:
+        raise Exception("No drinkware found")
+    
+    drinkware_id = drinkware_id[0]  # returns tuple (drinkware_id,)
+    
+    # now, query for all cocktails using that drinkware
+    query = f"""
+    SELECT recipe_id
+    FROM cocktail_drinkware
+    WHERE drinkware_id = {drinkware_id};
+    """
+    cur.execute(query)
+    recipe_ids = cur.fetchall()
+
+    # todo: fetch recipes
+
+    return []
 
 #
 #   App routes
@@ -190,15 +218,15 @@ def version():
     return render_template('version.html')
 
 # Get cocktail by name
-@app.route(API_URL_BASE + 'name=<name>')
-@app.route(API_URL_BASE + 'cocktail=<name>')
+@app.route(API_URL_BASE + 'name/<name>')
+@app.route(API_URL_BASE + 'cocktail/<name>')
 def name(name: str):
     name = name.lower()
     cocktails = query_by_name(name)
     return jsonify(cocktails)
 
 # Get recipes by ingredients
-@app.route(API_URL_BASE + 'ingredients=<ingredients>')
+@app.route(API_URL_BASE + 'ingredients/<ingredients>')
 def ingredients(ingredients: str):
     # Get the list of ingredients
     ingredients = ingredients.split('+')
@@ -209,7 +237,7 @@ def ingredients(ingredients: str):
     return jsonify(data)
 
 # Get recipes containing all of the specified ingredients
-@app.route(API_URL_BASE + 'contains=<ingredients>')
+@app.route(API_URL_BASE + 'contains/<ingredients>')
 def contains(ingredients: str):
     # Get the list of ingredients
     ingredients = ingredients.split('+')
@@ -218,6 +246,20 @@ def contains(ingredients: str):
     # Send our list to the query
     data = contains_all_ingredients(ingredients)
     return jsonify(data)
+
+# Get recipes by drinkware
+@app.route(API_URL_BASE + 'drinkware/<drinkware>')
+def drinkware(drinkware: str):
+    # Normalize the drinkware
+    drinkware = db_utilities.normalize_string(drinkware, cur)
+
+    # Send it to our query
+    data = query_by_drinkware(drinkware)
+    return jsonify(data)
+
+# Custom searches
+@app.route(API_URL_BASE + 'custom')
+
 
 # Route for index.html
 @app.route('/')

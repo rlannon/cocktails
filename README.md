@@ -44,24 +44,30 @@ The JSON Objects returned by this API contain the following fields:
 
 Paths supported by this API are:
 
-* `cocktail=<name>` or `name=<name>`- Get a cocktail by name
-* `ingredients=<ingredients>` - Lists cocktails containing any of the specified ingredients; ingredients may be concatenated with the plus sign (`+`)
-* `contains=<ingredients>` - Filter by cocktails that contain all of the specified ingredients; concatenation with the plus sign is supported
-* `garnish=<garnish>` - Filter cocktails by their typical garnishes. As with `ingredients` and `contains`, multiple may be specified with concatenation
-* `main_alcohol=<alcohol>` - Filter cocktails by their main alcohol ingredient
-* `drinkware=<drinkware>` - Filter cocktails by their typical drinkware:
-    * `rocks` - Drinks served in rocks/old-fashioned/lowball glasses
+* `cocktail/<name>` or `name/<name>`- Get a cocktail by name
+* `ingredients/<ingredients>` - Lists cocktails containing any of the specified ingredients; ingredients may be concatenated with the plus sign (`+`)
+* `contains/<ingredients>` - Filter by cocktails that contain all of the specified ingredients; concatenation with the plus sign is supported
+* `garnish/<garnish>` - Filter cocktails by their typical garnishes. As with `ingredients` and `contains`, multiple may be specified with concatenation
+* `drinkware/<drinkware>` - Filter cocktails by their typical drinkware:
+    * `rocks` or `old-fashioned` or `lowball` - Drinks served in rocks/old-fashioned/lowball glasses
     * `cocktail` - Drinks served in cocktail/martini glasses
     * `highball` - Drinks served in highball glasses
     * `collins` - Drinks served in collins glasses
     * `shot` - Drinks served in a shot glass
     * `hurricane` - Drinks served in hurricane glasses
     * `coupe` - Drinks served in coupe glasses
-* `served=<how served>` - Filter by how the cocktail is served:
+* `served/<how served>` - Filter by how the cocktail is served:
     * `rocks` - Filter by cocktails served on the rocks (e.g., an old fashioned)
     * `straight` - Filter by cocktails served straight (e.g., a martini)
     * `blended` - Filter by blended and frozen cocktails (e.g., a piña colada)
     * `hot` - Filter by hot cocktails (e.g., Irish coffee)
+
+You may also use a combination of the above paths as named parameters by using `/api/v1/custom` followed by URL parameters. For example:
+
+    .../api/v1/custom?ingredients=vodka&drinkware=old-fashioned&served=straight
+
+will search for cocktails which contain vodka, which are served in an old-fashioned glass, and which are served straight.
+
 
 ### Naming Conventions
 

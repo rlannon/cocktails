@@ -10,6 +10,14 @@ import recipe
 #   Normalization functions
 #
 
+def normalize_string(to_normalize: str, cur) -> str:
+    """
+    Normalizes a single string using normalize_strings
+    """
+
+    r = normalize_strings([to_normalize], cur)
+    return r[0]
+
 def normalize_strings(ingredients: list, cur) -> list:
     """
     normalize_strings
