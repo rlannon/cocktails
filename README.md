@@ -2,6 +2,24 @@
 
 A simple full-stack app to implement a cocktail lookup tool.
 
+## Getting Started
+
+### Database
+
+Included in this project is a folder of CSV files and some SQL for creating and populating a PostgreSQL database. I also intend on hosting this API, though there is not currently a working cloud application.
+
+### Server
+
+The server-side application utilizes [Flask](https://flask.palletsprojects.com/en/1.1.x/), a server-side framework for Python. All information regarding database connection is expected to be contained within a `.flaskenv` file which is not included in this repository -- you must supply one yourself if you intend on building/hosting this somehwere.
+
+While this project has a few Jinja templates, the server is not intended to host the actual web app itself -- rather, that is the client's job. The server-side templates contain some information about the API and use a flask markdown rendering library to accomplish this.
+
+All required libraries can be found in the [requirements](requirements.txt)
+
+### Client
+
+The client-side code implements a simple web app that actually utilizes the API.
+
 ## API
 
 Included in this project is an API to find cocktails and information about them. API calls are made with GET requests and always return JSON data. The base path to the API is `/api/v1/`.
@@ -45,6 +63,10 @@ Paths supported by this API are:
     * `blended` - Filter by blended and frozen cocktails (e.g., a piña colada)
     * `hot` - Filter by hot cocktails (e.g., Irish coffee)
 
+### Naming Conventions
+
+The strings you supply to the API will be normalized, where possible, to what the database expects. For example, the database uses the spelling 'whiskey', but 'whisky' is another common spelling; as such, if you try to look up by ingredient and use a common alternate spelling, it will be normalized to the spelling used by the database. This is done by maintaining a table of common spellings/terms and what their equivalent term (as used by the database) is.
+
 ### Cocktail list
 
-Note this tool isn't currently meant to be anything even remotely resembling a complete list of all the cocktails one might want to make; the included CSV files are just a sampling of a few different common cocktails using a variety of drinkware, ingredients, garnishes, and serving methods. The CSV folder is meant to be used to populate a database with a few different drinks.
+Note this tool isn't currently meant to be anything even remotely resembling a complete list of all the cocktails one might want to make; the included CSV files are just a sampling of a few different common cocktails using a variety of drinkware, ingredients, garnishes, and serving methods. The CSV folder is meant to be used to populate a database with a few different drinks to demo its functionality.
