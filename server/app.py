@@ -186,7 +186,6 @@ def query_by_drinkware(drinkware: str) -> list:
     Returns a list of recipes that are served in the supplied drinkware
     """
 
-    print(drinkware)
     query = f"SELECT drinkware_id FROM drinkware WHERE name = '{drinkware}';"
     cur.execute(query)
 
@@ -215,6 +214,25 @@ def query_by_drinkware(drinkware: str) -> list:
             )
         )
 
+    return recipes
+
+def query_by_served(served: str) -> list:
+    """
+    query_by_served
+    Finds recipes based on how they are served
+
+    @param  served  How the cocktail is served (e.g., on the rocks, straight up)
+    """
+    cur.execute(f"SELECT served_id FROM served WHERE name = '{served}';")
+    result = cur.fetchone()
+    if result is None:
+        raise Exception("Cannot find serving method")
+    served_id = result[0]
+    cur.execute(f"SELECT recipe_id FROM cocktail_served WHERE served_id = {served_id};")
+    recipe_ids = cur.fetchall()
+    recipes = []
+    for r_id in recipe_ids:
+        recipes.append(db_utilities.fetch_by_id(r_id[0], cur))
     return recipes
 
 
@@ -267,9 +285,19 @@ def drinkware(drinkware: str):
     data = query_by_drinkware(drinkware)
     return jsonify(data)
 
-# Custom searches
-@app.route(API_URL_BASE + 'custom')
+# Get recipes by how they are served
+@app.route(API_URL_BASE + 'served/<served>')
+def served(served: str):
+    # Normalize the string
+    served = db_utilities.normalize_string(served, cur)
 
+    # Send it to our querying function
+    data = query_by_served(served)
+    return jsonify(data)
+
+# Custom searches
+# @app.route(API_URL_BASE + 'custom')
+#   todo: custom searches
 
 # Route for index.html
 @app.route('/')
