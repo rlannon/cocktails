@@ -186,6 +186,7 @@ def query_by_drinkware(drinkware: str) -> list:
     Returns a list of recipes that are served in the supplied drinkware
     """
 
+    print(drinkware)
     query = f"SELECT drinkware_id FROM drinkware WHERE name = '{drinkware}';"
     cur.execute(query)
 
@@ -204,9 +205,18 @@ def query_by_drinkware(drinkware: str) -> list:
     cur.execute(query)
     recipe_ids = cur.fetchall()
 
-    # todo: fetch recipes
+    # now, fetch all recipe data based on the recipe id
+    recipes = []
+    for r_id in recipe_ids:
+        recipes.append(
+            db_utilities.fetch_by_id(
+                r_id[0],
+                cur
+            )
+        )
 
-    return []
+    return recipes
+
 
 #
 #   App routes
