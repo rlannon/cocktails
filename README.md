@@ -49,16 +49,17 @@ Paths supported by this API are:
 * `contains/<ingredients>` - Filter by cocktails that contain all of the specified ingredients; concatenation with the plus sign is supported
 * `garnish/<garnish>` - Filter cocktails by their typical garnishes. As with `ingredients` and `contains`, multiple may be specified with concatenation
 * `drinkware/<drinkware>` - Filter cocktails by their typical drinkware:
-    * `rocks` or `old-fashioned` or `lowball` - Drinks served in rocks/old-fashioned/lowball glasses
-    * `cocktail` - Drinks served in cocktail/martini glasses
-    * `highball` - Drinks served in highball glasses
-    * `collins` - Drinks served in collins glasses
-    * `shot` - Drinks served in a shot glass
-    * `hurricane` - Drinks served in hurricane glasses
-    * `coupe` - Drinks served in coupe glasses
+    * `old fashioned glass` or `rocks glass` or `old fashioned` or `lowball` - Drinks served in rocks/old-fashioned/lowball glasses
+    * `cocktail glass` - Drinks served in cocktail/martini glasses
+    * `highball glass` - Drinks served in highball glasses
+    * `collins glass` - Drinks served in collins glasses
+    * `shot glass` - Drinks served in a shot glass
+    * `hurricane glass` - Drinks served in hurricane glasses
+    * `coupe glass` - Drinks served in coupe glasses
 * `served/<how served>` - Filter by how the cocktail is served:
-    * `rocks` - Filter by cocktails served on the rocks (e.g., an old fashioned)
-    * `straight` - Filter by cocktails served straight (e.g., a martini)
+    * `on the rocks` or `iced` - Filter by cocktails served on the rocks (e.g., an old fashioned)
+    * `straight up` - Filter by cocktails served straight/up/straight up (e.g., a martini)
+    * `neat` - Filter by drinks served neat
     * `blended` - Filter by blended and frozen cocktails (e.g., a piña colada)
     * `hot` - Filter by hot cocktails (e.g., Irish coffee)
 
