@@ -1,0 +1,13 @@
+/*
+
+Cocktails
+style.css
+Copyright 2020 Riley Lannon
+
+Some custom styles/fixes to bootstrap elements
+
+*/
+
+#mode-selection button {
+    margin:1vh;
+}
