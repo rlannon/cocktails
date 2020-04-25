@@ -253,6 +253,23 @@ def name(name: str):
     cocktails = query_by_name(name)
     return jsonify(cocktails)
 
+# Get all ingredients
+@app.route(API_URL_BASE + 'ingredients')
+def list_ingredients():
+    cur.execute(
+        f"""
+        SELECT DISTINCT name
+        FROM ingredients;
+        """
+    )
+    results = cur.fetchall()
+
+    ingredients = []
+    for i in results:
+        ingredients.append(i[0])
+
+    return jsonify(ingredients)
+
 # Get recipes by ingredients
 @app.route(API_URL_BASE + 'ingredients/<ingredients>')
 def ingredients(ingredients: str):
@@ -275,6 +292,37 @@ def contains(ingredients: str):
     data = contains_all_ingredients(ingredients)
     return jsonify(data)
 
+@app.route(API_URL_BASE + 'garnish')
+def all_garnishes():
+    cur.execute(
+        """
+        SELECT name
+        FROM garnish;
+        """
+    )
+    data = cur.fetchall()
+    garnishes = []
+    for i in data:
+        garnishes.append(i[0])
+    return jsonify(garnishes)
+
+# todo: get recipes by garnish
+
+# Get all drinkware
+@app.route(API_URL_BASE + 'drinkware')
+def all_drinkware():
+    cur.execute(
+        f"""
+        SELECT name
+        FROM drinkware;
+        """
+    )
+    data = cur.fetchall()
+    drinkware = []
+    for i in data:
+        drinkware.append(i[0])
+    return jsonify(drinkware)
+
 # Get recipes by drinkware
 @app.route(API_URL_BASE + 'drinkware/<drinkware>')
 def drinkware(drinkware: str):
@@ -284,6 +332,21 @@ def drinkware(drinkware: str):
     # Send it to our query
     data = query_by_drinkware(drinkware)
     return jsonify(data)
+
+# Get all serving methods
+@app.route(API_URL_BASE + 'served')
+def all_served():
+    cur.execute(
+        """
+        SELECT name
+        FROM served;
+        """
+    )
+    data = cur.fetchall()
+    served = []
+    for i in data:
+        served.append(i[0])
+    return jsonify(served)
 
 # Get recipes by how they are served
 @app.route(API_URL_BASE + 'served/<served>')
