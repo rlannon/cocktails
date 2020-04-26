@@ -23,7 +23,7 @@ const SERVED_CONST = 5;
 // todo: fetch ingredients, drinkware, served, garnish from the database and store them somewhere so we can use them to populate the data tables
 // todo: consider - should this be done in the function (calling the API each time), or when the script is loaded (and then just use client-side data)?
 
-function display_query_input(which) {
+async function display_query_input(which) {
     /*
 
     display_query_input
@@ -40,11 +40,11 @@ function display_query_input(which) {
     }
 
     let input_div;
+    let callback_function;
 
     // Add items based on what we are querying by
     if (which === NAME_CONST) {
         // name query
-        console.log("query by name");
         
         // input row
         let input_row = document.createElement("div");
@@ -70,18 +70,28 @@ function display_query_input(which) {
 
         // append the whole input to our query div
         input_div = input_row;
+        callback_function = function() { console.log("callback for name"); };
     } else if (which === INGREDIENTS_CONST) {
         // ingredient query
-        console.log("query by ingredients");
+        // fetch ingredient list from database
+        let ingredients = await get_data("/ingredients");
+
+        // Now that we have the ingredients, send everything to our function
+        input_div = display_selector_and_table("Selected Ingredient", input_div, ingredients);
+        callback_function = function() { console.log("callback for ingredients"); };
     } else if (which === GARNISH_CONST) {
         // garnish query
-        console.log("query by garnish");
+        let garnishes = await get_data("/garnish");
+        input_div = display_selector_and_table("Selected Garnish", input_div, garnishes);
     } else if (which === DRINKWARE_CONST) {
         // drinkware query
-        console.log("query by drinkware");
+        let drinkware = await get_data("/drinkware");
+        input_div = display_selector_and_table("Selected Drinkware", input_div, drinkware);
     } else if (which == SERVED_CONST) {
         // served query
         console.log("query by serving method");
+        let served = await get_data("/served");
+        input_div = display_selector_and_table("Selected Serving Method", input_div, served);
     } else {
         // errorr; do not display anything more and log the error
         console.log("Invalid parameter");
@@ -111,14 +121,134 @@ function display_query_input(which) {
     // now, append a search button
     let button_row = document.createElement("div");
     button_row.setAttribute("class", "row");
+    button_row.setAttribute("id", "search-button");
     let button_col = document.createElement("div");
     button_col.setAttribute("class", "col");
     let button = document.createElement("button");
-    button.setAttribute("class", "btn btn-primary");
-    button.setAttribute("onclick", `console.log("querying...");`);  // todo: dispatch to function
+    button.setAttribute("class", "col btn btn-primary");
+    button.addEventListener("click", callback_function);
     button.innerText = "Search";
     
     button_col.appendChild(button);
     button_row.appendChild(button_col);
     query_div.appendChild(button_row);
+}
+
+function display_selector_and_table(what, where, item_list) {
+    /*
+
+    display_selector_and_table
+    Displays the selector for what we want to query and creates the table for it
+
+    @param  what    A string containing the name of what we are looking up (e.g., 'Ingredient')
+    @param  where   The div to which we want to append everything
+    @param  item_list   The list of items to populate our selector
+
+    */
+    
+    where = document.createElement("div");
+
+    // create a div for our list
+    let table_div = document.createElement("div");
+
+    // create a list to hold our ingredients
+    let selected_table = document.createElement("table");
+    selected_table.setAttribute("class", "table table-bordered table-striped");
+    selected_table.setAttribute("id", "selected-ingredients");
+    let selected_list_header = document.createElement("thead");
+    let selected_list_header_row = document.createElement("tr");
+    let selected_list_header_item = document.createElement("th");
+    selected_list_header_item.innerText = `${what}`;
+    selected_list_header_row.appendChild(selected_list_header_item);
+    selected_list_header.appendChild(selected_list_header_row);
+    selected_table.appendChild(selected_list_header);
+    let selected_table_body = document.createElement("tbody");
+    selected_table.appendChild(selected_table_body);
+
+    // add the table to our div
+    table_div.appendChild(selected_table);
+
+    // now add a 'clear' button
+    let clear_button_div = document.createElement("div");
+    clear_button_div.setAttribute("class", "row");
+    let clear_button_col = document.createElement("div");
+    clear_button_col.setAttribute("class", "col");
+    let clear_table_button = document.createElement("button");
+    clear_table_button.setAttribute("class", "btn btn-danger");
+    clear_table_button.addEventListener("click", function() {clear_table(selected_table)});
+    clear_table_button.innerText = "Clear table";
+    clear_button_col.appendChild(clear_table_button);
+    clear_button_div.appendChild(clear_button_col);
+
+    // create a selector
+    let selector_input_div = document.createElement("div");
+    selector_input_div.setAttribute("class", "row");
+    let selector_col = document.createElement("div");
+    selector_col.setAttribute("class", "col input-group");
+
+    // create the selector input
+    let selector = document.createElement("select");
+    selector.setAttribute("class", "custom-select");
+    let default_element = document.createElement("option");
+    default_element.setAttribute("value", "None");
+    default_element.innerText = "Select...";
+    selector.appendChild(default_element);
+    for (let ingredient of item_list) {
+        let option = document.createElement("option");
+        option.setAttribute("value", ingredient);
+        option.innerText = ingredient;
+        selector.appendChild(option);
+    }
+
+    // create the button
+    let add_button_div = document.createElement("div");
+    add_button_div.setAttribute("class", "input-group-append");
+    let add_button = document.createElement("button");
+    add_button.setAttribute("class", "btn btn-outline-secondary");
+    add_button.addEventListener("click", function() { add_to_table(selector, selected_table_body) });
+    add_button.innerText = `Add ${what}`;
+    add_button_div.appendChild(add_button);
+
+    // add the selector and button to the input
+    selector_col.appendChild(selector);
+    selector_col.appendChild(add_button_div);
+
+    // todo: display table of selected items
+
+    // construct the input div
+    selector_input_div.appendChild(selector_col);
+    where.appendChild(selector_input_div);
+    where.appendChild(table_div);
+    where.appendChild(clear_button_div);
+
+    // finally, return the generated content
+    return where;
+}
+
+function add_to_table(selector, table) {
+    /*
+
+    add_to_table
+    Adds the selected element from 'selector' to 'table'
+
+    */
+    let selected = selector.options[selector.selectedIndex].value;
+    if (selected === "None") {
+        console.log("Skipping");
+    } else {
+        console.log("Add '" + selected + "' to table");
+        let table_item = document.createElement("tr");
+        let table_col = document.createElement("td");
+        table_col.innerText = selected;
+        table_item.appendChild(table_col);
+        table.appendChild(table_item);
+    }
+}
+
+function clear_table(table) {
+    // Clears a table of all table rows
+    let old_tbody = table.querySelector("tbody");
+    while(old_tbody.firstChild) {
+        old_tbody.removeChild(old_tbody.lastChild);
+    }
 }

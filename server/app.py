@@ -259,7 +259,8 @@ def list_ingredients():
     cur.execute(
         f"""
         SELECT DISTINCT name
-        FROM ingredients;
+        FROM ingredients
+        ORDER BY name;
         """
     )
     results = cur.fetchall()
@@ -299,7 +300,8 @@ def all_garnishes():
     cur.execute(
         """
         SELECT name
-        FROM garnish;
+        FROM garnish
+        ORDER BY name;
         """
     )
     data = cur.fetchall()
@@ -316,7 +318,8 @@ def all_drinkware():
     cur.execute(
         f"""
         SELECT name
-        FROM drinkware;
+        FROM drinkware
+        ORDER BY name;
         """
     )
     data = cur.fetchall()
@@ -341,7 +344,8 @@ def all_served():
     cur.execute(
         """
         SELECT name
-        FROM served;
+        FROM served
+        ORDER BY name;
         """
     )
     data = cur.fetchall()

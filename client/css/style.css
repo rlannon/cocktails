@@ -21,3 +21,11 @@ Some custom styles/fixes to bootstrap elements
     margin-top: 1vh;
     margin-bottom: 1vh;
 }
+
+#query table {
+    margin-top: 5vh;
+}
+
+#search-button {
+    padding-top: 3vh;
+}
