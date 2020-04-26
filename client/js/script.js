@@ -20,9 +20,6 @@ const GARNISH_CONST = 3;
 const DRINKWARE_CONST = 4;
 const SERVED_CONST = 5;
 
-// todo: fetch ingredients, drinkware, served, garnish from the database and store them somewhere so we can use them to populate the data tables
-// todo: consider - should this be done in the function (calling the API each time), or when the script is loaded (and then just use client-side data)?
-
 async function display_query_input(which) {
     /*
 
@@ -70,28 +67,36 @@ async function display_query_input(which) {
 
         // append the whole input to our query div
         input_div = input_row;
-        callback_function = function() { console.log("callback for name"); };
+        callback_function = async function() {
+            return await name_query(input_field.value);
+        };
     } else if (which === INGREDIENTS_CONST) {
         // ingredient query
         // fetch ingredient list from database
         let ingredients = await get_data("/ingredients");
 
         // Now that we have the ingredients, send everything to our function
-        input_div = display_selector_and_table("Selected Ingredient", input_div, ingredients);
+        input_div = display_selector_and_table("Ingredient", input_div, ingredients);
+
+        // todo: add option for 'contains any' vs 'contains all' vs 'contains only'
         callback_function = function() { console.log("callback for ingredients"); };
     } else if (which === GARNISH_CONST) {
         // garnish query
         let garnishes = await get_data("/garnish");
-        input_div = display_selector_and_table("Selected Garnish", input_div, garnishes);
+        input_div = display_selector_and_table("Garnish", input_div, garnishes);
     } else if (which === DRINKWARE_CONST) {
         // drinkware query
         let drinkware = await get_data("/drinkware");
-        input_div = display_selector_and_table("Selected Drinkware", input_div, drinkware);
+        input_div = display_selector_and_table("Drinkware", input_div, drinkware);
+        callback_function = async function() {
+            let query_table = input_div.querySelector("table");
+            return await drinkware_query(query_table);
+        };
     } else if (which == SERVED_CONST) {
         // served query
         console.log("query by serving method");
         let served = await get_data("/served");
-        input_div = display_selector_and_table("Selected Serving Method", input_div, served);
+        input_div = display_selector_and_table("Serving Method", input_div, served);
     } else {
         // errorr; do not display anything more and log the error
         console.log("Invalid parameter");
@@ -109,7 +114,7 @@ async function display_query_input(which) {
 
     let query_header_text = document.createElement("h3");
     query_header_text.setAttribute("class", "alert alert-secondary text-center");
-    query_header_text.textContent = "Look Up Cocktail";
+    query_header_text.textContent = "Cocktail Lookup";
 
     query_header_col.appendChild(query_header_text);
     query_header_row.appendChild(query_header_col);
@@ -126,7 +131,18 @@ async function display_query_input(which) {
     button_col.setAttribute("class", "col");
     let button = document.createElement("button");
     button.setAttribute("class", "col btn btn-primary");
-    button.addEventListener("click", callback_function);
+    button.addEventListener("click", async function() {
+        // get the returned data
+        let returned_data = await callback_function();
+        console.log(returned_data); // log it to the console for now (for debugging)
+
+        // use the appropriate function to display our returned data
+        if (returned_data.length > 0) {
+            // display returned data in a readable way
+        } else {
+            // display error message such as 'no recipes found'
+        }
+    });
     button.innerText = "Search";
     
     button_col.appendChild(button);
@@ -212,8 +228,6 @@ function display_selector_and_table(what, where, item_list) {
     // add the selector and button to the input
     selector_col.appendChild(selector);
     selector_col.appendChild(add_button_div);
-
-    // todo: display table of selected items
 
     // construct the input div
     selector_input_div.appendChild(selector_col);
