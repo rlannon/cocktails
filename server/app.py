@@ -292,6 +292,8 @@ def contains(ingredients: str):
     data = contains_all_ingredients(ingredients)
     return jsonify(data)
 
+# todo: option for cocktails containing *only* the specified ingredients (but not necessarily *all* of them)
+
 @app.route(API_URL_BASE + 'garnish')
 def all_garnishes():
     cur.execute(

@@ -19,21 +19,20 @@
         <!--    Mode selection  -->
         <div class="row">
             <div class="col" id="mode-selection">
-                <button type="button" class="btn btn-primary">Give me a recipe for this cocktail</button>
-                <button type="button" class="btn btn-success">Give me recipes I can make with these ingredients</button>
-                <button type="button" class="btn btn-danger">I know some ingredients, but not the name</button>
-                <button type="button" class="btn btn-info">Give me cocktails with a particular garnish</button>
-                <button type="button" class="btn btn-secondary">Give me cocktails in a particular drinkware</button>
-                <button type="button" class="btn btn-dark">Give me cocktails served a particular way</button>
+                <button type="button" class="btn btn-primary" onclick="display_query_input(NAME_CONST)">Give me a recipe for this cocktail</button>
+                <button type="button" class="btn btn-success" onclick="display_query_input(INGREDIENTS_CONST)">Give me recipes that contain certain ingredients</button>
+                <button type="button" class="btn btn-info" onclick="display_query_input(GARNISH_CONST)">Give me cocktails with a particular garnish</button>
+                <button type="button" class="btn btn-secondary" onclick="display_query_input(DRINKWARE_CONST)">Give me cocktails in a particular drinkware</button>
+                <button type="button" class="btn btn-dark" onclick="display_query_input(SERVED_CONST)">Give me cocktails served a particular way</button>
             </div>
             <div class="col">
-                <h3>Choose an option</h3>
-                <p>There are a few ways you can query cocktail recipes in the API. Choose an option to use it and get some recipes.</p>
+                <h3>Get Cocktail Recipes</h3>
+                <p>Know the name of a cocktail, but not the recipe (or the other way round)? Maybe you have a bunch of ingredients in your cupboard and don't know what you can make with them, or you have some new cocktail glasses and want to know what you could serve in them. No matter the case, you can use this simple tool to look up and filter cocktails by a whole array of different criteria. Just use the buttons to choose what you want to search by and enter your query.</p>
             </div>
         </div>
 
         <!--    Search query input  -->
-        <div class="row" id="query">
+        <div id="query">
             <!--    Modified with JavaScript    -->
         </div>
 

@@ -10,4 +10,14 @@ Some custom styles/fixes to bootstrap elements
 
 #mode-selection button {
     margin:1vh;
+    margin-left: 0vh;
+}
+
+#query {
+    padding-top: 5vh;
+}
+
+#query .row {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }
