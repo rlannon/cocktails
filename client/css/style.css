@@ -8,6 +8,11 @@ Some custom styles/fixes to bootstrap elements
 
 */
 
+#main {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
 #mode-selection button {
     margin:1vh;
     margin-left: 0vh;

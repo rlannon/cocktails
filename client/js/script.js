@@ -146,10 +146,12 @@ async function display_query_input(which) {
         // get the returned data
         let returned_data = await callback_function();
 
+        // get the DOM element
+        let disp = document.querySelector("#recipe-display");
+
         // use the appropriate function to display our returned data
         if (returned_data.length > 0) {
             // display returned data in a readable way
-            let disp = document.querySelector("#recipe-display");
 
             // clear the display
             while (disp.firstChild) {
@@ -162,7 +164,7 @@ async function display_query_input(which) {
             result_header.innerText = "Results";
             disp.appendChild(result_header);
 
-            let infobox = document.createElement("h4");
+            let infobox = document.createElement("p");
             infobox.innerText = "Click on the card to view";
             disp.appendChild(infobox);
 
@@ -176,8 +178,13 @@ async function display_query_input(which) {
             disp.appendChild(cards);
         } else {
             // display error message such as 'no recipes found'
-            console.log("No recipes found");
-            // todo: display actual error
+            let error_card = document.createElement("h3");
+            error_card.setAttribute("class", "alert alert-danger");
+            error_card.innerText = "No recipes found";
+            disp.appendChild(error_card);
+
+            let msg = document.createElement("p");
+            msg.innerText = "Try modifying your search terms (e.g., if you put 'bourbon' or 'scotch', try putting 'whiskey' instead)";
         }
     });
     button.innerText = "Search";
@@ -360,7 +367,7 @@ function create_recipe_card(recipe, index) {
     garnish_div.setAttribute("class", "card-body");
 
     let garnish_head = document.createElement("h5");
-    garnish_head.innerText = "Garnishes";
+    garnish_head.innerText = "Common Garnishes";
     garnish_div.appendChild(garnish_head);
 
     let garnishes = document.createElement("ul");
