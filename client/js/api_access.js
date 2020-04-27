@@ -41,6 +41,46 @@ async function name_query(name)
     return await get_data(`/cocktail/${name}`)
 }
 
+async function ingredient_query(table) {
+    /*
+
+    ingredient_query
+    Queries the API for cocktails with the specified ingredients
+
+    */
+
+    // todo: differentiate between the different ingredient inclusions of 'any', 'all', and 'only'
+    let ingredients_string = "/ingredients/";
+    let tbody = table.querySelector('tbody');
+    for (let i = 0; i < tbody.children.length; i++) {
+        // get the ingredient name
+        let name = tbody.children[i].firstChild.innerText;  // tbody->trow->first tcol->text
+        ingredients_string += name;
+        if (i < (tbody.children.length - 1)) {
+            ingredients_string += "+";
+        }
+    }
+
+    // make the API call
+    let recipes = await get_data(ingredients_string);
+    return recipes;
+}
+
+async function garnish_query(table) {
+    // query the api by garnish
+    let recipes = [];
+    let tbody = table.querySelector('tbody');
+    for (let i = 0; i < tbody.children.length; i++) {
+        let garnish_name = tbody.children[i].firstChild.innerText;
+        let fetched = await get_data(`/garnish/${garnish_name}`);
+
+        for (let recipe of fetched) {
+            recipes.push(recipe);
+        }
+    }
+    return recipes;
+}
+
 async function drinkware_query(table)
 {
     /*
@@ -71,5 +111,20 @@ async function drinkware_query(table)
     }
 
     // return all of our fetched recipes
+    return recipes;
+}
+
+async function served_query(table) {
+    // Query by serving method
+    let recipes = [];
+    let tbody = table.querySelector('tbody');
+    for (let i = 0; i < tbody.children.length; i++) {
+        // get the name
+        let served_name = tbody.children[i].firstChild.innerText;
+        let fetched = await get_data(`/served/${served_name}`);
+        for (let recipe of fetched) {
+            recipes.push(recipe);
+        }
+    }
     return recipes;
 }

@@ -235,6 +235,23 @@ def query_by_served(served: str) -> list:
         recipes.append(db_utilities.fetch_by_id(r_id[0], cur))
     return recipes
 
+def query_by_garnish(garnish: str) -> list:
+    """
+    query_by_garnish
+    Finds recipes based on their garnish
+    """
+    cur.execute(f"SELECT garnish_id FROM garnish WHERE name = '{garnish}';")
+    result = cur.fetchone()
+    if result is None:
+        raise Exception("Cannot find garnish")
+    garnish_id = result[0]
+    cur.execute(f"SELECT recipe_id FROM cocktail_garnish WHERE garnish_id = {garnish_id};")
+    recipe_ids = cur.fetchall()
+    recipes = []
+    for r_id in recipe_ids:
+        recipes.append(db_utilities.fetch_by_id(r_id[0], cur))
+    return recipes
+
 
 #
 #   App routes
@@ -310,7 +327,15 @@ def all_garnishes():
         garnishes.append(i[0])
     return jsonify(garnishes)
 
-# todo: get recipes by garnish
+@app.route(API_URL_BASE + 'garnish/<garnish>')
+def garnish(garnish: str):
+    # get recipes that have a given garnish
+    # normalize the garnish
+    garnish = db_utilities.normalize_string(garnish, cur)
+    
+    # query it
+    data = query_by_garnish(garnish)
+    return jsonify(data)
 
 # Get all drinkware
 @app.route(API_URL_BASE + 'drinkware')

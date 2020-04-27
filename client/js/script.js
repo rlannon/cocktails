@@ -79,11 +79,18 @@ async function display_query_input(which) {
         input_div = display_selector_and_table("Ingredient", input_div, ingredients);
 
         // todo: add option for 'contains any' vs 'contains all' vs 'contains only'
-        callback_function = function() { console.log("callback for ingredients"); };
+        callback_function = async function() {
+            let query_table = input_div.querySelector('table');
+            return await ingredient_query(query_table);
+        };
     } else if (which === GARNISH_CONST) {
         // garnish query
         let garnishes = await get_data("/garnish");
         input_div = display_selector_and_table("Garnish", input_div, garnishes);
+        callback_function = async function() {
+            let query_table = input_div.querySelector('table');
+            return await garnish_query(query_table);
+        };
     } else if (which === DRINKWARE_CONST) {
         // drinkware query
         let drinkware = await get_data("/drinkware");
@@ -97,8 +104,12 @@ async function display_query_input(which) {
         console.log("query by serving method");
         let served = await get_data("/served");
         input_div = display_selector_and_table("Serving Method", input_div, served);
+        callback_function = async function() {
+            let query_table = input_div.querySelector('table');
+            return await served_query(query_table);
+        };
     } else {
-        // errorr; do not display anything more and log the error
+        // errorr; do not display anything more and log the error (this shouldn't really occur, though)
         console.log("Invalid parameter");
         return;
     }
@@ -139,8 +150,10 @@ async function display_query_input(which) {
         // use the appropriate function to display our returned data
         if (returned_data.length > 0) {
             // display returned data in a readable way
+            console.log("Found recipes");
         } else {
             // display error message such as 'no recipes found'
+            console.log("No recipes found");
         }
     });
     button.innerText = "Search";
