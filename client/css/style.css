@@ -29,3 +29,12 @@ Some custom styles/fixes to bootstrap elements
 #search-button {
     padding-top: 3vh;
 }
+
+#recipe-display {
+    padding-top: 3vh;
+}
+
+#recipe-display .card {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}

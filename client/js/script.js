@@ -145,22 +145,35 @@ async function display_query_input(which) {
     button.addEventListener("click", async function() {
         // get the returned data
         let returned_data = await callback_function();
-        console.log(returned_data); // log it to the console for now (for debugging)
 
         // use the appropriate function to display our returned data
         if (returned_data.length > 0) {
             // display returned data in a readable way
-            
-            // todo: clear what's currently on display
-
-            console.log("Found recipes");
             let disp = document.querySelector("#recipe-display");
-            for (let r of returned_data) {
-                // create the recipe card
-                let card = create_recipe_card(r);
 
-                // todo: display card on page
+            // clear the display
+            while (disp.firstChild) {
+                disp.removeChild(disp.lastChild);
             }
+
+            // create the new display
+            let result_header = document.createElement("h3");
+            result_header.setAttribute("class", "alert alert-success");
+            result_header.innerText = "Results";
+            disp.appendChild(result_header);
+
+            let infobox = document.createElement("h4");
+            infobox.innerText = "Click on the card to view";
+            disp.appendChild(infobox);
+
+            let cards = document.createElement("div");
+            for (let i in returned_data) {
+                // create the recipe card
+                let card = create_recipe_card(returned_data[i], i);
+                cards.appendChild(card);
+            }
+
+            disp.appendChild(cards);
         } else {
             // display error message such as 'no recipes found'
             console.log("No recipes found");
@@ -291,23 +304,33 @@ function clear_table(table) {
     }
 }
 
-function create_recipe_card(recipe) {
+function create_recipe_card(recipe, index) {
     // Given JSON data for a recipe, creates a card for it
 
     // create the card
     let card = document.createElement("div");
-    card.setAttribute("class", "card");
+    card.setAttribute("class", "card border-dark");
 
     // create the card header
-    let card_header = document.createElement("div");
+    let card_header = document.createElement("button");
     card_header.setAttribute("class", "card-header");
+    card_header.setAttribute("data-toggle", "collapse");
+    card_header.setAttribute("data-target", `#recipe-${index}-card`);
+
     let recipe_header = document.createElement("h4");
     recipe_header.innerText = recipe.name;
     card_header.appendChild(recipe_header);
     card.appendChild(card_header);
 
+    // create the card's body
+    let body = document.createElement("div");
+    body.setAttribute("class","card-body collapse multi-collapse");
+    body.setAttribute("id", `recipe-${index}-card`);
+
     // Create the list of ingredients
     let ingredients = document.createElement("div");
+    ingredients.setAttribute("class", "card-body");
+
     let ingredients_header = document.createElement("h5");
     ingredients_header.innerText = "Ingredients";
     ingredients.appendChild(ingredients_header);
@@ -315,8 +338,8 @@ function create_recipe_card(recipe) {
     let ingredient_list = document.createElement("ul");
     ingredient_list.setAttribute("class", "list-group list-group-flush");
     for (let ingredient of recipe.ingredients) {
-        console.log(ingredient);
         let name = document.createElement("li");
+        name.setAttribute("class", "list-group-item");
         name.innerText = ingredient.ingredient;
 
         if (ingredient.unit === "to taste") {
@@ -330,9 +353,89 @@ function create_recipe_card(recipe) {
 
     // add the list to the ingredient div, add ingredients to the card
     ingredients.appendChild(ingredient_list);
-    card.appendChild(ingredients);
+    body.appendChild(ingredients);
 
-    // todo: add the rest of the recipe info
+    // add the garnishes
+    let garnish_div = document.createElement("div");
+    garnish_div.setAttribute("class", "card-body");
+
+    let garnish_head = document.createElement("h5");
+    garnish_head.innerText = "Garnishes";
+    garnish_div.appendChild(garnish_head);
+
+    let garnishes = document.createElement("ul");
+    garnishes.setAttribute("class", "list-group list-group-flush");
+    for (let garnish of recipe.garnish) {
+        let li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
+        li.innerText = garnish;
+        garnishes.appendChild(li);
+    }
+    garnish_div.appendChild(garnishes);
+    
+    body.appendChild(garnish_div);
+
+    // add the drinkware and serving info
+    let drinkware_div = document.createElement("div");
+    drinkware_div.setAttribute("class", "card-body");
+
+    let drinkware_head = document.createElement("h5");
+    drinkware_head.innerText = "Typically served in:";
+    drinkware_div.appendChild(drinkware_head);
+
+    let drinkware = document.createElement("ul");
+    drinkware.setAttribute("class", "list-group list-group-flush");
+    for (let d of recipe.drinkware) {
+        let li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
+        li.innerText = d;
+        drinkware.appendChild(li);
+    }
+    drinkware_div.appendChild(drinkware);
+
+    body.appendChild(drinkware_div);
+
+    // Add the 'served' info
+    let served_div = document.createElement("div");
+    served_div.setAttribute("class", "card-body");
+
+    let served_head = document.createElement("h5");
+    served_head.innerText = "Typically served:";
+    served_div.appendChild(served_head);
+
+    let all_served = document.createElement("ul");
+    all_served.setAttribute("class", "list-group list-group-flush");
+    for (let served of recipe.served) {
+        let li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
+        li.innerText = served;
+        all_served.appendChild(li);
+    }
+    served_div.appendChild(all_served);
+
+    body.appendChild(served_div);
+
+    // create the instructions and notes
+    let card_text = document.createElement("div");
+    card_text.setAttribute("class", "card-body");
+
+    if (recipe.instructions != "") {
+        let instructions = document.createElement("p");
+        instructions.innerHTML = "<b>Instructions:</b> " + recipe.instructions;
+        card_text.appendChild(instructions);
+    }
+
+    if (recipe.notes != "") {
+        let notes = document.createElement("p");
+        notes.innerHTML = "<b>Notes:</b> " + recipe.notes;
+        card_text.appendChild(notes);
+    }
+
+    // add the card text section
+    body.appendChild(card_text);
+
+    // add the entire card body
+    card.appendChild(body);
 
     // return the recipe card
     return card;
