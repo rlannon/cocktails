@@ -149,16 +149,14 @@ async function display_query_input(which) {
         // get the DOM element
         let disp = document.querySelector("#recipe-display");
 
+        // clear the display
+        while (disp.firstChild) {
+            disp.removeChild(disp.lastChild);
+        }
+
         // use the appropriate function to display our returned data
         if (returned_data.length > 0) {
             // display returned data in a readable way
-
-            // clear the display
-            while (disp.firstChild) {
-                disp.removeChild(disp.lastChild);
-            }
-
-            // create the new display
             let result_header = document.createElement("h3");
             result_header.setAttribute("class", "alert alert-success");
             result_header.innerText = "Results";

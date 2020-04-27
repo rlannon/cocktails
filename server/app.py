@@ -266,7 +266,7 @@ def version():
 @app.route(API_URL_BASE + 'name/<name>')
 @app.route(API_URL_BASE + 'cocktail/<name>')
 def name(name: str):
-    name = name.lower()
+    name = db_utilities.normalize_string(name, cur)
     cocktails = query_by_name(name)
     return jsonify(cocktails)
 

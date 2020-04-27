@@ -37,6 +37,7 @@ Some custom styles/fixes to bootstrap elements
 
 #recipe-display {
     padding-top: 3vh;
+    padding-bottom: 10vh;   /* we need some padding on the bottom of the page */
 }
 
 #recipe-display .card {
