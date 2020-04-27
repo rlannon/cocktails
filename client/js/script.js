@@ -150,10 +150,21 @@ async function display_query_input(which) {
         // use the appropriate function to display our returned data
         if (returned_data.length > 0) {
             // display returned data in a readable way
+            
+            // todo: clear what's currently on display
+
             console.log("Found recipes");
+            let disp = document.querySelector("#recipe-display");
+            for (let r of returned_data) {
+                // create the recipe card
+                let card = create_recipe_card(r);
+
+                // todo: display card on page
+            }
         } else {
             // display error message such as 'no recipes found'
             console.log("No recipes found");
+            // todo: display actual error
         }
     });
     button.innerText = "Search";
@@ -278,4 +289,51 @@ function clear_table(table) {
     while(old_tbody.firstChild) {
         old_tbody.removeChild(old_tbody.lastChild);
     }
+}
+
+function create_recipe_card(recipe) {
+    // Given JSON data for a recipe, creates a card for it
+
+    // create the card
+    let card = document.createElement("div");
+    card.setAttribute("class", "card");
+
+    // create the card header
+    let card_header = document.createElement("div");
+    card_header.setAttribute("class", "card-header");
+    let recipe_header = document.createElement("h4");
+    recipe_header.innerText = recipe.name;
+    card_header.appendChild(recipe_header);
+    card.appendChild(card_header);
+
+    // Create the list of ingredients
+    let ingredients = document.createElement("div");
+    let ingredients_header = document.createElement("h5");
+    ingredients_header.innerText = "Ingredients";
+    ingredients.appendChild(ingredients_header);
+
+    let ingredient_list = document.createElement("ul");
+    ingredient_list.setAttribute("class", "list-group list-group-flush");
+    for (let ingredient of recipe.ingredients) {
+        console.log(ingredient);
+        let name = document.createElement("li");
+        name.innerText = ingredient.ingredient;
+
+        if (ingredient.unit === "to taste") {
+            name.innerText += ` ${ingredient.unit}`;
+        } else {
+            name.innerText += ` (${ingredient.measure} ${ingredient.unit})`;
+        }
+
+        ingredient_list.appendChild(name);
+    }
+
+    // add the list to the ingredient div, add ingredients to the card
+    ingredients.appendChild(ingredient_list);
+    card.appendChild(ingredients);
+
+    // todo: add the rest of the recipe info
+
+    // return the recipe card
+    return card;
 }
