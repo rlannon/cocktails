@@ -78,7 +78,7 @@ def fetch(name: str, cur) -> list:
 
     # get the basic cocktail information from 'recipe'
     query = f"""
-    SELECT recipe.recipe_id
+    SELECT recipe.id
     FROM recipe
     WHERE recipe.name = '{name}';
     """
@@ -101,9 +101,9 @@ def fetch_by_id(id, cur) -> recipe.recipe:
 
     cur.execute(
         f"""
-        SELECT recipe_id, name, instructions, notes
+        SELECT id, name, instructions, notes
         FROM recipe
-        WHERE recipe_id = {id};
+        WHERE id = {id};
         """
     )
     r = cur.fetchone()
@@ -111,7 +111,7 @@ def fetch_by_id(id, cur) -> recipe.recipe:
         raise Exception("No recipe with the given ID")
 
     # Give the indices their own labels for ease of use
-    recipe_id = r[0]
+    id = r[0]
     recipe_name = r[1]
     recipe_instructions = r[2]
     recipe_notes = r[3]
@@ -121,8 +121,8 @@ def fetch_by_id(id, cur) -> recipe.recipe:
     SELECT drinkware.name
     FROM ((cocktail_drinkware
     INNER JOIN drinkware ON drinkware.drinkware_id = cocktail_drinkware.drinkware_id)
-    INNER JOIN recipe ON recipe.recipe_id = cocktail_drinkware.recipe_id)
-    WHERE recipe.recipe_id = {recipe_id};
+    INNER JOIN recipe ON recipe.id = cocktail_drinkware.recipe_id)
+    WHERE recipe.id = {id};
     """
     cur.execute(query)
     drinkware_data = cur.fetchall()
@@ -141,8 +141,8 @@ def fetch_by_id(id, cur) -> recipe.recipe:
     SELECT served.name
     FROM ((cocktail_served
     INNER JOIN served ON served.served_id = cocktail_served.served_id)
-    INNER JOIN recipe ON cocktail_served.recipe_id = recipe.recipe_id)
-    WHERE recipe.recipe_id = {recipe_id};
+    INNER JOIN recipe ON cocktail_served.recipe_id = recipe.id)
+    WHERE recipe.id = {id};
     """
     cur.execute(query)
     served_data = cur.fetchall()
@@ -160,8 +160,8 @@ def fetch_by_id(id, cur) -> recipe.recipe:
     SELECT garnish.name
     FROM ((cocktail_garnish
     INNER JOIN garnish ON cocktail_garnish.garnish_id = garnish.garnish_id)
-    INNER JOIN recipe ON cocktail_garnish.recipe_id = recipe.recipe_id)
-    WHERE recipe.recipe_id = {recipe_id};
+    INNER JOIN recipe ON cocktail_garnish.recipe_id = recipe.id)
+    WHERE recipe.id = {id};
     """
     cur.execute(query)
     garnish_data = cur.fetchall()
@@ -178,7 +178,7 @@ def fetch_by_id(id, cur) -> recipe.recipe:
     SELECT ingredients.name, cocktail_ingredient.measure_number, cocktail_ingredient.unit_of_measurement
     FROM cocktail_ingredient
     INNER JOIN ingredients ON ingredients.ingredient_id = cocktail_ingredient.ingredient_id
-    WHERE cocktail_ingredient.recipe_id = {recipe_id};
+    WHERE cocktail_ingredient.recipe_id = {id};
     """
     cur.execute(query)
     ingredients = cur.fetchall()

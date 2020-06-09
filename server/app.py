@@ -70,7 +70,7 @@ def query_by_ingredient(ingredients: list) -> list:
     query = f"""
             SELECT DISTINCT recipe.name
             FROM ((recipe
-            INNER JOIN cocktail_ingredient ON cocktail_ingredient.recipe_id = recipe.recipe_id)
+            INNER JOIN cocktail_ingredient ON cocktail_ingredient.recipe_id = recipe.id)
             INNER JOIN ingredients ON ingredients.ingredient_id = cocktail_ingredient.ingredient_id)
             WHERE
             """
@@ -164,7 +164,7 @@ def contains_all_ingredients(ingredients: list) -> list:
     names = []
     for r in results:
         # Fetch the name corresponding with the obtained recipe id
-        cur.execute(f"SELECT name FROM recipe WHERE recipe_id = {r[0]};")
+        cur.execute(f"SELECT name FROM recipe WHERE id = {r[0]};")
         r_name = cur.fetchone()
         
         # Make sure we got a result; append it to our names list

@@ -61,7 +61,7 @@ Paths supported by this API are:
     * `coupe glass` - Drinks served in coupe glasses
 * `served` - Get all serving methods
 * `served/<how served>` - Filter by how the cocktail is served:
-    * `on the rocks` or `iced` - Filter by cocktails served on the rocks (e.g., an old fashioned)
+    * `on the rocks`, `with ice`, or `iced` - Filter by cocktails served on the rocks (e.g., an old fashioned)
     * `straight up` - Filter by cocktails served straight/up/straight up (e.g., a martini)
     * `neat` - Filter by drinks served neat
     * `blended` - Filter by blended and frozen cocktails (e.g., a piña colada)

@@ -31,28 +31,43 @@ The JSON Objects returned by this API contain the following fields:
 
 Paths supported by this API are:
 
-* `cocktail=<name>` or `name=<name>` - Get a cocktail by name
-* `ingredients=<ingredients>` - Lists cocktails containing any of the specified ingredients; ingredients may be concatenated with the plus sign (`+`)
-* `contains=<ingredients>` - Filter by cocktails that contain all of the specified ingredients; concatenation with the plus sign is supported
-* `garnish=<garnish>` - Filter cocktails by their typical garnishes. As with `ingredients` and `contains`, multiple may be specified with concatenation
-* `main_alcohol=<alcohol>` - Filter cocktails by their main alcohol ingredient
-* `drinkware=<drinkware>` - Filter cocktails by their typical drinkware:
-    * `rocks` - Drinks served in rocks/old-fashioned/lowball glasses
-    * `cocktail` - Drinks served in cocktail/martini glasses
-    * `highball` - Drinks served in highball glasses
-    * `collins` - Drinks served in collins glasses
-    * `shot` - Drinks served in a shot glass
-    * `hurricane` - Drinks served in hurricane glasses
-    * `coupe` - Drinks served in coupe glasses
-* `served=<how served>` - Filter by how the cocktail is served:
-    * `rocks` - Filter by cocktails served on the rocks (e.g., an old fashioned)
-    * `straight` - Filter by cocktails served straight (e.g., a martini)
+* `cocktail/<name>` or `name/<name>`- Get a cocktail by name
+* `ingredients` - List ingredients in the database
+* `ingredients/<ingredients>` - Lists cocktails containing any of the specified ingredients; ingredients may be concatenated with the plus sign (`+`)
+* `contains/<ingredients>` - Filter by cocktails that contain all of the specified ingredients; concatenation with the plus sign is supported
+* `garnish` - List garnishes in the database
+* `garnish/<garnish>` - Filter cocktails by their typical garnishes. As with `ingredients` and `contains`, multiple may be specified with concatenation
+* `drinkware` - List all drinkware in the database
+* `drinkware/<drinkware>` - Filter cocktails by their typical drinkware:
+    * `old fashioned glass` or `rocks glass` or `old fashioned` or `lowball` - Drinks served in rocks/old-fashioned/lowball glasses
+    * `cocktail glass` - Drinks served in cocktail/martini glasses
+    * `highball glass` - Drinks served in highball glasses
+    * `collins glass` - Drinks served in collins glasses
+    * `shot glass` - Drinks served in a shot glass
+    * `hurricane glass` - Drinks served in hurricane glasses
+    * `coupe glass` - Drinks served in coupe glasses
+* `served` - Get all serving methods
+* `served/<how served>` - Filter by how the cocktail is served:
+    * `on the rocks`, `with ice`, or `iced` - Filter by cocktails served on the rocks (e.g., an old fashioned)
+    * `straight up` - Filter by cocktails served straight/up/straight up (e.g., a martini)
+    * `neat` - Filter by drinks served neat
     * `blended` - Filter by blended and frozen cocktails (e.g., a piña colada)
     * `hot` - Filter by hot cocktails (e.g., Irish coffee)
 
+You may also use a combination of the above paths as named parameters by using `/api/v1/custom` followed by URL parameters. For example:
+
+    .../api/v1/custom?ingredients=vodka&drinkware=old-fashioned&served=straight
+
+will search for cocktails which contain vodka, which are served in an old-fashioned glass, and which are served straight.
+
+
+### Naming Conventions
+
+The strings you supply to the API will be normalized, where possible, to what the database expects. For example, the database uses the spelling 'whiskey', but 'whisky' is another common spelling; as such, if you try to look up by ingredient and use a common alternate spelling, it will be normalized to the spelling used by the database. This is done by maintaining a table of common spellings/terms and what their equivalent term (as used by the database) is.
+
 ### Cocktail list
 
-Note this tool isn't currently meant to be a complete list of all the cocktails one might want to make, it is just a sampling of a few different common cocktails using a variety of drinkware, ingredients, garnishes, and serving methods. As such, don't expect to be able to find *any* cocktail in here, but you can expect to find some of the more well-known ones.
+Note this tool isn't currently meant to be anything even remotely resembling a complete list of all the cocktails one might want to make; the included CSV files are just a sampling of a few different common cocktails using a variety of drinkware, ingredients, garnishes, and serving methods. The CSV folder is meant to be used to populate a database with a few different drinks to demo its functionality.
 
     {% endfilter %}
 </div>
