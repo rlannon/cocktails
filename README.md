@@ -6,7 +6,9 @@ A simple full-stack app to implement a cocktail lookup tool.
 
 ### Database
 
-Included in this project is a folder of CSV files and some SQL for creating and populating a PostgreSQL database. I also intend on hosting this API, though there is not currently a working cloud application.
+Included in this project is a folder of CSV files and some SQL for creating and populating a PostgreSQL database. Note that the database is nowhere _near_ complete; it is simply a sampling of a few different recipes that demonstrate the APIs functionality. I intend on continuing to expand the database, but my attention has largely moved to other projects, so adding recipes is sort of on the back burner. I intend on writing a utility to add cocktails to the database a little bit more easily to streamline this process (and potentially let others update it as well).
+
+The server-side code is hosted [on heroku](https://rlannon-cocktails-api.herokuapp.com/).
 
 ### Server
 
@@ -14,7 +16,7 @@ The server-side application utilizes [Flask](https://flask.palletsprojects.com/e
 
 While this project has a few Jinja templates, the server is not intended to host the actual web app itself -- rather, that is the client's job. The server-side templates contain some information about the API and use a flask markdown rendering library to accomplish this.
 
-All required libraries can be found in the [requirements](requirements.txt)
+All required libraries can be found in the [requirements](requirements.txt).
 
 ### Client
 
